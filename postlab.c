@@ -1,10 +1,10 @@
 /*
- * Archivo: Prelab.c
+ * Archivo: Postlab.c
  * Dispositivo: PIC16F887
  * Compilador:  XC8, MPLABX v5.40
  * Autor: José Fernando de León González
  * Programa: Contador utilizando push buttons
- * Hardware: leds y resistencias en PORTA, botones en PORTB
+ * Hardware: leds y resistencias en PORTA, botones en PORTB, displays multiplexados utilizando 2N222 en PORTD & PORTC
  * 
  * Creado: 4/04/22
  * Última modificación: 4/04/22
@@ -93,14 +93,6 @@ void __interrupt() isr (void)
         }
         INTCONbits.RBIF = 0;    // Limpiamos bandera de interrupción RBIF
     }
-    if (PIR1bits.TMR1IF)
-    {
-        PORTC = PORTC++;
-        
-        TMR1H = 0x0B;               // Reiniciar TIMER1
-        TMR1L = 0xDC;
-        PIR1bits.TMR1IF = 0;
-    }
     if (INTCONbits.T0IF)
     {
         PORTD = 0;
@@ -180,7 +172,6 @@ void setup (void){
     INTCONbits.PEIE = 1;        // Habilitamos interrupciones de los puertos
     
     INTCONbits.RBIE = 1;        // Habilitamos interrupciones del PORTB
-    PIE1bits.TMR1IE = 1;       // Activamos interrupciones del TIMER1
     INTCONbits.TMR0IE = 1;     // activamos interrupciones del TIMER0
     
     
@@ -199,16 +190,7 @@ void setup (void){
     INTCONbits.T0IF = 0;
     
     
-    T1CONbits.TMR1GE = 0;       // Siempre contando (TIMER1)
-    T1CONbits.T1CKPS = 0b01;    // T1CKPS <1:0> -> 01 Prescaler 1:2 
-    T1CONbits.T1OSCEN = 0;      // reloj interno
-    T1CONbits.TMR1CS = 0;
-    T1CONbits.TMR1ON = 1;       // Encender TIMER1
-    
-    TMR1H = 0x0B;               // Reiniciar TIMER1
-    TMR1L = 0xDC;
-    
-    PIR1bits.TMR1IF = 0;       // Limpiamos la bandera de interrupción del TIMER1
+   
 }
 /*------------------------------------------------------------------------------
  * Funciones
